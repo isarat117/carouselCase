@@ -83,13 +83,15 @@
         generateCarouselHTML(products) {
             return `
                 <div class="product-carousel">
+                  <button class="carousel-arrow prev-arrow">&lt;</button>
                     <div class="carousel-container">
-                        <button class="carousel-arrow prev-arrow">&lt;</button>
+                      
                         <div class="carousel-track">
                             ${products.map(product => this.generateProductCard(product)).join('')}
                         </div>
-                        <button class="carousel-arrow next-arrow">&gt;</button>
+                       
                     </div>
+                     <button class="carousel-arrow next-arrow">&gt;</button>
                     <div class="carousel-indicators">
                         ${products.map((_, index) => `
                             <div class="carousel-line ${index === 0 ? 'active' : ''}" style="cursor: pointer"></div>
@@ -643,11 +645,11 @@
                 }
 
                 .prev-arrow {
-                    left: -15px;
+                    left: -30px;
                 }
 
                 .next-arrow {
-                    right: -15px;
+                    right: -30px;
                 }
 
                 .view-product {
