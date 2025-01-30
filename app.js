@@ -92,7 +92,7 @@
                     </div>
                     <div class="carousel-indicators">
                         ${products.map((_, index) => `
-                            <div class="carousel-line ${index === 0 ? 'active' : ''}"></div>
+                            <div class="carousel-line ${index === 0 ? 'active' : ''}" style="cursor: pointer"></div>
                         `).join('')}
                     </div>
                 </div>
@@ -126,6 +126,20 @@
 
             $('.prev-arrow').on('click', () => this.navigate('prev'));
             $('.next-arrow').on('click', () => this.navigate('next'));
+            
+            $('.carousel-line').on('click', (e) => {
+                const index = $(e.target).index();
+                this.goToSlide(index);
+            });
+        }
+
+        goToSlide(index) {
+            this.currentIndex = index;
+            const itemWidth = this.items.first().width();
+            this.currentTranslate = -this.currentIndex * itemWidth;
+            this.prevTranslate = this.currentTranslate;
+            this.track.css('transition', 'transform 0.3s ease');
+            this.updateCarousel();
         }
 
         navigate(direction) {
