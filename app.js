@@ -15,7 +15,8 @@
 
         init(products) {
             if (!products.length) {
-                return '<div class="no-products">No Products Found</div>';
+                $('#app').html('<div class="no-products">No Products Found</div>');
+                return;
             }
 
             const html = this.generateCarouselHTML(products);
