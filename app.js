@@ -104,7 +104,7 @@
         generateProductCard(product) {
             return `
                 <div class="carousel-item">
-                    <div class="product-card">
+                    <a href="${product.url}" class="product-card" target="_blank">
                         <img src="${product.image}" alt="${product.name}" loading="lazy" draggable="false">
                         <h3>${product.name}</h3>
                         <div class="price-container">
@@ -114,8 +114,8 @@
                             }
                             <span class="current-price">${product.priceText}</span>
                         </div>
-                        <a href="${product.url}" class="view-product" target="_blank">VIEW PRODUCT</a>
-                    </div>
+                        <span class="view-product">VIEW PRODUCT</span>
+                    </a>
                 </div>
             `;
         }
@@ -587,6 +587,9 @@
                 .product-card {
                     text-align: center;
                     padding: 15px;
+                    text-decoration: none;
+                    color: inherit;
+                    display: block;
                 }
 
                 .product-card img {
@@ -629,7 +632,7 @@
                 .carousel-arrow {
                     position: absolute;
                     top: 50%;
-                    transform: translateY(-50%);
+                    transform: translateY(-200%);
                     background: rgba(0, 0, 0, 0.5);
                     color: white;
                     border: none;
@@ -821,7 +824,6 @@
                         padding: 10px;
                     }
                 }
-}
             `;
 
             $('<style>').html(css).appendTo('head');
