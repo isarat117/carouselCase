@@ -814,6 +814,14 @@
                 .carousel-line.active {
                     background: #626262;    
                 }
+                @media (max-width: 600px) {
+                    .navigation-buttons {
+                        width: 80%;
+                        gap: 20px;
+                        padding: 10px;
+                    }
+                }
+}
             `;
 
             $('<style>').html(css).appendTo('head');
