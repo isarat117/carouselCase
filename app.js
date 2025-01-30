@@ -370,6 +370,36 @@
                 this.renderQuestion();
             } else {
                 const filteredProducts = this.filterProducts();
+                if (filteredProducts.length === 0) {
+                    const totalSteps = this.questions[0].steps.length;
+                    const html = `
+                        <div class="question-container">
+                            <h2 class="question-title" style="font-size: 18px; color: #626262; margin-top: 150px;">Products Not Found</h2>
+                            <div class="navigation-buttons">
+                                <div class="nav-button-container">
+                                    <button class="nav-button" id="backBtn">
+                                        <
+                                    </button>
+                                    <span class="button-text">Back</span>
+                                </div>
+                                <div class="nav-button-container">
+                                    <button class="nav-button" id="nextBtn" disabled>
+                                        >
+                                    </button>
+                                    <span class="button-text">Next</span>
+                                </div>
+                            </div>
+                            <div class="progress-indicators">
+                                ${Array(totalSteps).fill(0).map((_, index) => `
+                                    <div class="indicator-line ${index <= this.currentStep ? 'active' : ''}"></div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                    $('#app').html(html);
+                    $('#backBtn').on('click', () => this.handleBackButton());
+                    return;
+                }
                 this.carousel.init(filteredProducts);
             }
         }
@@ -426,6 +456,15 @@
 
         filterByPrice(products) {
             const priceRange = this.selectedAnswers[2];
+            
+            if (priceRange.includes('+')) {
+                const minPrice = parseInt(priceRange.replace('+', ''));
+                return products.filter(product => {
+                    if (!product || typeof product.price !== 'number') return false;
+                    return product.price >= minPrice;
+                });
+            }
+            
             const [min, max] = priceRange.split('-').map(Number);
             return products.filter(product => {
                 if (!product || typeof product.price !== 'number') return false;
