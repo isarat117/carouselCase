@@ -103,7 +103,7 @@
             return `
                 <div class="carousel-item">
                     <div class="product-card">
-                        <img src="${product.image}" alt="${product.name}" loading="lazy">
+                        <img src="${product.image}" alt="${product.name}" loading="lazy" draggable="false">
                         <h3>${product.name}</h3>
                         <div class="price-container">
                             ${product.oldPrice ? 
