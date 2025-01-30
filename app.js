@@ -11,6 +11,8 @@
             this.prevTranslate = 0;
             this.animationID = 0;
             this.currentPosition = 0;
+            this.dragStartX = 0;
+            this.dragDistance = 0;
         }
 
         init(products) {
@@ -35,6 +37,8 @@
         touchStart(event) {
             this.isDragging = true;
             this.startPos = this.getPositionX(event);
+            this.dragStartX = this.startPos;
+            this.dragDistance = 0;
             this.animationID = requestAnimationFrame(this.animation.bind(this));
             this.track.css('cursor', 'grabbing');
             this.track.css('transition', 'none');
@@ -45,6 +49,7 @@
             event.preventDefault();
             const currentPosition = this.getPositionX(event);
             this.currentTranslate = this.prevTranslate + currentPosition - this.startPos;
+            this.dragDistance = Math.abs(currentPosition - this.dragStartX);
         }
 
         touchEnd() {
@@ -54,6 +59,12 @@
             this.track.css('transition', 'transform 0.3s ease');
 
             const movedBy = this.currentTranslate - this.prevTranslate;
+
+            if (this.dragDistance > 10) {
+                this.track.find('.product-card').one('click', (e) => {
+                    e.preventDefault();
+                });
+            }
 
             if (Math.abs(movedBy) > 100) {
                 if (movedBy < 0) {
@@ -105,7 +116,7 @@
         generateProductCard(product) {
             return `
                 <div class="carousel-item">
-                    <a href="${product.url}" class="product-card" target="_blank">
+                    <a href="${product.url}" class="product-card" target="_blank" draggable="false">
                         <img src="${product.image}" alt="${product.name}" loading="lazy" draggable="false">
                         <h3>${product.name}</h3>
                         <div class="price-container">
@@ -149,13 +160,35 @@
             const itemWidth = this.items.first().width();
             
             if (direction === 'prev') {
-                this.currentIndex = this.currentIndex === 0 ? this.totalItems - 1 : this.currentIndex - 1;
+                if (this.currentIndex === 0) {
+                    this.track.css('transition', 'none');
+                    this.currentIndex = this.totalItems - 1;
+                    this.currentTranslate = -(this.currentIndex + 1) * itemWidth;
+                    this.track.css('transform', `translateX(${this.currentTranslate}px)`);
+                    
+                    this.track[0].offsetHeight;
+                    
+                    this.track.css('transition', 'transform 0.3s ease');
+                    this.currentIndex = this.totalItems - 1;
+                } else {
+                    this.currentIndex--;
+                }
             } else {
-                this.currentIndex = this.currentIndex === this.totalItems - 1 ? 0 : this.currentIndex + 1;
+                if (this.currentIndex === this.totalItems - 1) {
+                    this.track.css('transition', 'none');
+                    this.currentIndex = 0;
+                    this.currentTranslate = 0;
+                    this.track.css('transform', `translateX(${this.currentTranslate}px)`);
+                    
+                    this.track[0].offsetHeight;
+                    
+                    this.track.css('transition', 'transform 0.3s ease');
+                    this.currentIndex = 0;
+                } else {
+                    this.currentIndex++;
+                }
             }
 
-            this.prevTranslate = -this.currentIndex * itemWidth;
-            this.currentTranslate = this.prevTranslate;
             this.updateCarousel();
         }
 
